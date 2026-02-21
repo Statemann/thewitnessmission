@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Witness Missions — Welcome Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--red:#b22020;--red-light:#e04545;--cream:#e8c45a;--dark:#070f0a;--mid:#0b1a10;--muted:#d4a017;}
+    html{scroll-behavior:smooth}
+    body{background:var(--dark);color:#d4a017;font-family:'Lato',sans-serif;font-weight:300;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(5,12,6,0.98),transparent);backdrop-filter:blur(6px)}
+    .nav-logo{display:flex;align-items:center;gap:0.75rem}
+    .nav-cross{width:26px;height:26px;position:relative;flex-shrink:0}
+    .nav-cross::before{content:'';position:absolute;width:4px;height:100%;background:var(--red);left:50%;transform:translateX(-50%);border-radius:2px}
+    .nav-cross::after{content:'';position:absolute;width:100%;height:4px;background:var(--red);top:30%;border-radius:2px}
+    .nav-wordmark{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;color:var(--cream);text-transform:uppercase}
+    .nav-wordmark span{color:var(--red-light)}
+    .nav-btn{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.2em;color:var(--red-light);text-decoration:none;text-transform:uppercase;border:1px solid rgba(40,140,70,0.45);padding:0.5rem 1.2rem;border-radius:2px;transition:all 0.2s}
+    .nav-btn:hover{border-color:#5abf8a;background:rgba(8,45,18,0.25)}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center;padding:2rem}
+    .hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 50% at 50% 38%,rgba(10,40,20,0.35) 0%,transparent 70%),radial-gradient(ellipse 100% 60% at 50% 100%,rgba(3,15,6,0.9) 0%,transparent 60%)}
+    .hero-cross-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;opacity:0.035;pointer-events:none}
+    .hero-cross-bg::before{content:'';position:absolute;width:26px;height:100%;background:rgba(60,180,90,0.5);left:50%;transform:translateX(-50%);border-radius:6px}
+    .hero-cross-bg::after{content:'';position:absolute;width:100%;height:26px;background:rgba(60,180,90,0.5);top:30%;border-radius:6px}
+    .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .particle{position:absolute;width:2px;height:2px;background:rgba(60,180,90,0.45);border-radius:50%;animation:rise linear infinite;opacity:0}
+    @keyframes rise{0%{transform:translateY(100vh);opacity:0}10%{opacity:0.5}90%{opacity:0.2}100%{transform:translateY(-10vh) translateX(20px);opacity:0}}
+    .hero-logo{width:clamp(160px,28vw,280px);margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s ease 0.2s forwards;filter:drop-shadow(0 0 40px rgba(178,32,32,0.35))}
+    .hero-eyebrow{font-family:'Cinzel',serif;font-size:0.67rem;letter-spacing:0.35em;color:var(--red-light);text-transform:uppercase;margin-bottom:1.4rem;opacity:0;animation:fadeUp 1s ease 0.5s forwards}
+    .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8.5vw,7rem);font-weight:300;line-height:1.05;margin-bottom:1.8rem;opacity:0;animation:fadeUp 1s ease 0.8s forwards;color:#e8c45a}
+    .hero-title em{font-style:italic;color:var(--red-light)}
+    .hero-verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:#d4a017;max-width:500px;line-height:1.8;margin-bottom:0.5rem;opacity:0;animation:fadeUp 1s ease 1.1s forwards}
+    .verse-ref{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--red-light);opacity:0;animation:fadeUp 1s ease 1.3s forwards}
+    .hero-cta{margin-top:2.8rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 1s ease 1.6s forwards}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .btn{display:inline-block;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;padding:1rem 2.6rem;border-radius:2px;text-decoration:none;cursor:pointer;transition:all 0.3s;border:none}
+    .btn-fill{color:var(--dark);background:var(--cream)}
+    .btn-fill:hover{background:#f0d070;transform:translateY(-2px)}
+    .btn-outline{color:var(--red-light);background:transparent;border:1px solid rgba(178,32,32,0.5)}
+    .btn-outline:hover{border-color:var(--red-light);background:rgba(178,32,32,0.1);transform:translateY(-2px)}
+    .scroll-cue{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0;animation:fadeUp 1s ease 2.2s forwards}
+    .scroll-cue span{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--red-light);text-transform:uppercase}
+    .scroll-line{width:1px;height:46px;background:linear-gradient(to bottom,#4caf7d,transparent);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+    /* SECTIONS */
+    section{padding:6rem 1.5rem}
+    .wrap{max-width:860px;margin:0 auto}
+    .tag{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.35em;color:var(--red-light);text-transform:uppercase;margin-bottom:1.2rem;display:block}
+    .title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1.15;margin-bottom:1.6rem;color:#e8c45a}
+    .title em{font-style:italic;color:var(--red-light)}
+    .body{font-size:1.08rem;color:#d4a017;line-height:1.9;max-width:640px}
+
+    /* WHAT HAPPENED */
+    .s-what{background:rgba(178,32,32,0.04);border-top:1px solid rgba(40,140,70,0.22);border-bottom:1px solid rgba(40,140,70,0.22)}
+
+    /* PROMISE */
+    .s-promise{padding:5.5rem 2rem;background:#081508;text-align:center;position:relative;overflow:hidden}
+    .s-promise::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(10,50,20,0.2) 0%,transparent 70%);pointer-events:none}
+    .promise-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2.1rem);line-height:1.75;color:#e8c45a;max-width:680px;margin:0 auto 1.2rem}
+    .promise-q span{color:var(--red-light);font-style:normal}
+
+    /* STEPS */
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2.2rem;margin-top:3.5rem}
+    .step{padding:2.2rem 1.8rem;border:1px solid rgba(40,140,70,0.2);border-radius:3px;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s}
+    .step::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(10,50,20,0.15) 0%,transparent 70%);pointer-events:none}
+    .step:hover{border-color:rgba(60,200,100,0.55);transform:translateY(-4px)}
+    .step-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(60,180,100,0.25);line-height:1;margin-bottom:1rem}
+    .step-title{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.18em;color:var(--red-light);margin-bottom:0.8rem;text-transform:uppercase}
+    .step-desc{font-size:1rem;color:#d4a017;line-height:1.75}
+
+    /* FAQ */
+    .s-faq{background:rgba(8,35,15,0.09);border-top:1px solid rgba(40,140,70,0.14);border-bottom:1px solid rgba(40,140,70,0.14)}
+    .faq-item{border-bottom:1px solid rgba(40,140,70,0.2)}
+    .faq-q{padding:1.4rem 0;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#e8c45a;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:color 0.2s;user-select:none}
+    .faq-q:hover{color:#6dcc8a}
+    .faq-icon{font-size:1.5rem;color:var(--red);transition:transform 0.3s;flex-shrink:0;line-height:1}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-a{max-height:0;overflow:hidden;font-size:1rem;color:#d4a017;line-height:1.85;transition:max-height 0.5s ease,padding 0.3s ease}
+    .faq-item.open .faq-a{max-height:400px;padding-bottom:1.4rem}
+
+    /* PRAYER */
+    .s-prayer{background:rgba(8,35,15,0.12);border-top:1px solid rgba(40,140,70,0.17);border-bottom:1px solid rgba(40,140,70,0.17)}
+    .prayer-box{max-width:600px;margin:3rem auto 0;border:1px solid rgba(40,140,70,0.25);border-radius:3px;padding:2.5rem 3rem;position:relative;background:rgba(8,35,15,0.12)}
+    .prayer-box::before{content:'✝';position:absolute;top:-0.9rem;left:50%;transform:translateX(-50%);background:var(--dark);padding:0 1rem;color:var(--red);font-size:1rem}
+    .prayer-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#d4a017;line-height:2}
+
+    /* CONTACT */
+    .s-contact{background:#081508;border-top:1px solid rgba(40,140,70,0.2)}
+    .form-wrap{max-width:680px;margin:3rem auto 0}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+    .form-group{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1.2rem}
+    .form-group.no-mb{margin-bottom:0}
+    .form-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--red-light);text-transform:uppercase}
+    .form-input,.form-select,.form-textarea{background:rgba(10,50,20,0.08);border:1px solid rgba(40,140,70,0.32);border-radius:2px;color:#d4a017;font-family:'Lato',sans-serif;font-size:0.95rem;font-weight:300;padding:0.85rem 1rem;outline:none;transition:border-color 0.2s,background 0.2s;width:100%}
+    .form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d94040' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+    .form-select option{background:#0b1a10;color:#d4a017}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#5abf8a;background:rgba(8,40,18,0.2)}
+    .form-input::placeholder,.form-textarea::placeholder{color:rgba(212,160,23,0.45)}
+    .form-textarea{resize:vertical;min-height:120px;line-height:1.7}
+    .form-check{display:flex;align-items:flex-start;gap:0.85rem;margin-bottom:1.1rem}
+    .form-check input[type=checkbox]{appearance:none;width:18px;height:18px;border:1px solid rgba(40,140,70,0.45);border-radius:2px;background:transparent;cursor:pointer;flex-shrink:0;margin-top:2px;transition:all 0.2s;position:relative}
+    .form-check input[type=checkbox]:checked{background:var(--red);border-color:var(--red)}
+    .form-check input[type=checkbox]:checked::after{content:'✓';position:absolute;color:#fff;font-size:0.68rem;top:50%;left:50%;transform:translate(-50%,-50%)}
+    .form-check label{font-size:0.95rem;color:#d4a017;line-height:1.5;cursor:pointer}
+    .form-submit{display:flex;justify-content:center;margin-top:2rem}
+    .form-error{display:none;text-align:center;color:var(--red-light);font-size:0.88rem;margin-top:1rem;font-style:italic}
+    .form-success{display:none;text-align:center;padding:3rem 2rem;border:1px solid rgba(40,140,70,0.32);border-radius:3px;background:rgba(8,40,18,0.2)}
+    .success-icon{font-size:2.5rem;color:var(--red);margin-bottom:1rem}
+    .form-success h3{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;margin-bottom:0.8rem;color:#e8c45a}
+    .form-success p{font-size:0.97rem;color:var(--muted);line-height:1.8}
+
+    /* AI CHAT WIDGET */
+    .chat-bubble{position:fixed;bottom:1.8rem;right:1.8rem;z-index:1000;display:flex;flex-direction:column;align-items:flex-end;gap:0.8rem}
+    .chat-toggle{width:58px;height:58px;border-radius:50%;background:var(--red);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:transform 0.2s,background 0.2s;font-size:1.4rem}
+    .chat-toggle:hover{background:var(--red-light);transform:scale(1.08)}
+    .chat-window{width:320px;max-height:460px;background:#0b1a10;border:1px solid rgba(40,140,70,0.3);border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.6);display:none;flex-direction:column;overflow:hidden}
+    .chat-window.open{display:flex}
+    .chat-header{background:#081508;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(40,140,70,0.2)}
+    .chat-header-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;color:#e8c45a;text-transform:uppercase}
+    .chat-header-sub{font-size:0.72rem;color:#d4a017;margin-top:0.15rem}
+    .chat-close{background:none;border:none;color:#d4a017;cursor:pointer;font-size:1.2rem;padding:0.2rem;line-height:1}
+    .chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.8rem}
+    .chat-messages::-webkit-scrollbar{width:4px}
+    .chat-messages::-webkit-scrollbar-track{background:transparent}
+    .chat-messages::-webkit-scrollbar-thumb{background:rgba(40,140,70,0.3);border-radius:2px}
+    .msg{max-width:85%;padding:0.65rem 0.9rem;border-radius:8px;font-size:0.88rem;line-height:1.55}
+    .msg-ai{background:rgba(10,50,20,0.5);border:1px solid rgba(40,140,70,0.2);color:#d4a017;align-self:flex-start;border-bottom-left-radius:2px}
+    .msg-user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:2px}
+    .msg-typing{display:flex;align-items:center;gap:4px;padding:0.65rem 0.9rem}
+    .dot{width:6px;height:6px;background:#d4a017;border-radius:50%;animation:bounce 1.2s infinite}
+    .dot:nth-child(2){animation-delay:0.2s}
+    .dot:nth-child(3){animation-delay:0.4s}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+    .chat-input-row{display:flex;gap:0.5rem;padding:0.8rem;border-top:1px solid rgba(40,140,70,0.2);background:#081508}
+    .chat-input{flex:1;background:rgba(10,50,20,0.3);border:1px solid rgba(40,140,70,0.3);border-radius:6px;color:#d4a017;font-family:'Lato',sans-serif;font-size:0.85rem;padding:0.6rem 0.8rem;outline:none;resize:none}
+    .chat-input::placeholder{color:rgba(212,160,23,0.4)}
+    .chat-input:focus{border-color:#4caf7d}
+    .chat-send{background:var(--red);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:0.6rem 0.9rem;font-size:1rem;transition:background 0.2s;flex-shrink:0}
+    .chat-send:hover{background:var(--red-light)}
+    .chat-send:disabled{opacity:0.5;cursor:not-allowed}
+
+    /* FOOTER */
+    footer{background:#050e06;border-top:1px solid rgba(40,140,70,0.2);padding:4rem 2rem 3rem;text-align:center}
+    .footer-logo{width:130px;margin:0 auto 1.5rem;display:block;opacity:0.85}
+    .footer-verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#c49a10;margin-bottom:0.5rem}
+    .footer-tag{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:rgba(212,160,23,0.55);text-transform:uppercase;margin-top:1rem}
+    .footer-copy{font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.18em;color:rgba(212,160,23,0.35);text-transform:uppercase;margin-top:2rem}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.75s ease,transform 0.75s ease}
+    .reveal.on{opacity:1;transform:translateY(0)}
+
+    @media(max-width:768px){
+      nav{padding:0.9rem 1.2rem}
+      .nav-wordmark{font-size:0.6rem;letter-spacing:0.12em}
+      .nav-btn{font-size:0.55rem;padding:0.4rem 0.8rem;letter-spacing:0.12em}
+      .hero{padding:5rem 1.2rem 2rem}
+      .hero-logo{width:150px}
+      .hero-title{font-size:clamp(2.4rem,10vw,4rem)}
+      .hero-verse{font-size:0.95rem}
+      .hero-cta{flex-direction:column;align-items:center;gap:0.8rem;margin-top:2rem}
+      .btn{width:100%;max-width:280px;text-align:center;padding:0.9rem 1.5rem}
+      section{padding:3.5rem 1.2rem}
+      .title{font-size:clamp(1.7rem,7vw,2.4rem)}
+      .body{font-size:0.97rem}
+      .steps-grid{grid-template-columns:1fr;gap:1.4rem}
+      .step{padding:1.8rem 1.4rem}
+      .form-row{grid-template-columns:1fr;gap:0}
+      .form-group{margin-bottom:1rem}
+      .prayer-box{padding:2rem 1.2rem;margin:2rem 0 0}
+      .prayer-text{font-size:0.98rem}
+      .promise-q{font-size:1.15rem;padding:0 0.5rem}
+      .s-promise{padding:3.5rem 1.2rem}
+      .faq-q{font-size:1rem;padding:1.2rem 0}
+      .scroll-cue{display:none}
+      footer{padding:3rem 1.2rem 2rem}
+      .footer-logo{width:110px}
+      .form-wrap{margin:2rem 0 0}
+      .hero-eyebrow{font-size:0.58rem;letter-spacing:0.2em}
+      .chat-window{width:290px}
+    }
+    @media(max-width:400px){
+      .hero-title{font-size:2.2rem}
+      .nav-wordmark{display:none}
+      .title{font-size:1.6rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-cross"></div>
+    <span class="nav-wordmark">The Witness <span>Missions</span></span>
+  </div>
+  <a href="#connect" class="nav-btn">Connect With Us</a>
+</nav>
+
+<div class="particles" id="particles"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-cross-bg"></div>
+  <img src="logo.png" alt="The Witness Missions" class="hero-logo"/>
+  <p class="hero-eyebrow">Today is the first day of the rest of your life</p>
+  <h1 class="hero-title">Welcome<br>to the <em>Family.</em></h1>
+  <p class="hero-verse">"Therefore, if anyone is in Christ, he is a new creation.<br>The old has passed away; behold, the new has come."</p>
+  <p class="verse-ref">2 Corinthians 5:17</p>
+  <div class="hero-cta">
+    <a href="#beginning" class="btn btn-fill">Begin Your Journey</a>
+    <a href="#connect" class="btn btn-outline">Connect With Us</a>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- WHAT HAPPENED -->
+<section class="s-what" id="beginning">
+  <div class="wrap">
+    <span class="tag reveal">Understanding Your Decision</span>
+    <h2 class="title reveal">Something <em>beautiful</em><br>just happened.</h2>
+    <p class="body reveal">By placing your faith in Jesus Christ, you have received the most extraordinary gift imaginable — forgiveness of every sin, reconciliation with God, and the promise of eternal life. This was not a small step. Heaven itself is rejoicing over you right now.</p>
+    <p class="body reveal" style="margin-top:1.2rem">You are no longer defined by your past or your fears. You are a new creation — a beloved child of God, fully known and fully loved. God has been drawing you toward this moment all along, and now His Spirit lives inside you to lead and empower you every day.</p>
+  </div>
+</section>
+
+<!-- PROMISE BANNER -->
+<div class="s-promise">
+  <p class="promise-q reveal">"For God so loved the world that He gave His one and only Son,<br>that whoever believes in Him shall not perish<br>but have <span>eternal life.</span>"</p>
+  <p class="verse-ref reveal" style="opacity:1;color:var(--red-light)">John 3:16</p>
+</div>
+
+<!-- NEXT STEPS -->
+<section id="nextsteps">
+  <div class="wrap">
+    <span class="tag reveal">What Comes Next</span>
+    <h2 class="title reveal">Your first <em>steps</em><br>in faith.</h2>
+    <p class="body reveal">The Christian life is a journey, not a destination. Here are four foundational practices that will help you grow strong in your new faith.</p>
+    <div class="steps-grid">
+      <div class="step reveal"><div class="step-num">01</div><div class="step-title">Talk to God Daily</div><p class="step-desc">Prayer is simply a conversation with your Heavenly Father. There is no formula — speak honestly and openly. He hears every word and delights in your voice.</p></div>
+      <div class="step reveal"><div class="step-num">02</div><div class="step-title">Read the Bible</div><p class="step-desc">Start with the Gospel of John to learn about Jesus. The Bible is God's living word — it will guide, comfort, and transform you as you read it daily.</p></div>
+      <div class="step reveal"><div class="step-num">03</div><div class="step-title">Find a Church</div><p class="step-desc">You were not meant to walk this path alone. A local church family will encourage you, teach you, and walk with you through every season of life.</p></div>
+      <div class="step reveal"><div class="step-num">04</div><div class="step-title">Share Your Story</div><p class="step-desc">Tell someone about your decision. Declaring your faith out loud is powerful and marks the beginning of a bold new chapter in your life.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="s-faq">
+  <div class="wrap">
+    <span class="tag reveal">Common Questions</span>
+    <h2 class="title reveal">You might be <em>wondering…</em></h2>
+    <div style="margin-top:2.5rem">
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFAQ(this)">What exactly did I just do? <span class="faq-icon">+</span></div><div class="faq-a">You placed your trust in Jesus Christ — acknowledging that He died for your sins, rose from the dead, and is now the Lord of your life. This is called salvation, and it is a permanent, irreversible gift. Nothing can take it away from you.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFAQ(this)">Do I have power over sin now? <span class="faq-icon">+</span></div><div class="faq-a">God's desire for you is freedom, not bondage. Through Christ, you have been given power over sin — not just forgiveness of it. The Holy Spirit now lives in you, and He is greater than anything that once held you back (1 John 4:4). His grace restores you and His Spirit empowers you to walk in victory.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFAQ(this)">Do I feel different? Should I? <span class="faq-icon">+</span></div><div class="faq-a">Some people feel an immediate rush of peace and joy; others feel very little at first. Your salvation is not based on feelings — it is based on God's promise, which is far more reliable. Deeper joy and transformation will naturally follow as you grow.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFAQ(this)">Should I be baptized? <span class="faq-icon">+</span></div><div class="faq-a">Baptism is a beautiful public declaration of your faith. It does not save you, but it is an important step of obedience and testimony. Jesus himself was baptized and commanded His followers to be as well. Talk to a pastor about taking this meaningful step.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFAQ(this)">What if my family or friends don't understand? <span class="faq-icon">+</span></div><div class="faq-a">Some of the people closest to you may be confused or even resistant. That's okay. Continue to love them well, live out your faith with grace, and pray for them. Your changed life will speak louder than any argument.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRAYER -->
+<section class="s-prayer" id="prayer">
+  <div class="wrap" style="text-align:center">
+    <span class="tag reveal">A Prayer for You</span>
+    <h2 class="title reveal" style="margin:0 auto 0.5rem">A prayer to <em>begin</em><br>each morning.</h2>
+    <p class="body reveal" style="margin:0 auto">Pray this — or any prayer in your own words — as you start each new day with Christ.</p>
+    <div class="prayer-box reveal">
+      <p class="prayer-text">Heavenly Father, thank You for the gift of a new day and for the grace You have shown me.<br><br>I am Yours. Guide my steps today. Help me to know Your voice, to walk in Your love, and to reflect Your kindness to everyone I meet.<br><br>Your Spirit in me is greater than anything I face. I walk in the freedom and victory You purchased for me. Keep my eyes fixed on You today, and let Your joy be my strength.<br><br>In the name of Jesus, Amen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="s-contact" id="connect">
+  <div class="wrap">
+    <span class="tag reveal">Stay Connected</span>
+    <h2 class="title reveal">We'd love to <em>hear</em><br>from you.</h2>
+    <p class="body reveal">You don't have to walk this new life alone. Share your information below and our team will reach out to encourage, support, and journey with you.</p>
+    <div class="form-wrap">
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">✝</div>
+        <h3>Welcome to the family.</h3>
+        <p>We've received your information and someone from The Witness Missions team will be in touch with you soon.<br><br>Keep seeking, keep praying — God is walking with you every step of the way.</p>
+      </div>
+      <form id="contactForm" name="new-believer-connect" method="POST" action="/success.html" netlify netlify-honeypot="bot-field">
+        <p style="display:none"><label>Don't fill this out: <input name="bot-field"/></label></p>
+        <div class="form-row">
+          <div class="form-group no-mb reveal">
+            <label class="form-label" for="firstName">First Name *</label>
+            <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Your first name"/>
+          </div>
+          <div class="form-group no-mb reveal">
+            <label class="form-label" for="lastName">Last Name *</label>
+            <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Your last name"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group no-mb reveal">
+            <label class="form-label" for="email">Email Address *</label>
+            <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com"/>
+          </div>
+          <div class="form-group no-mb reveal">
+            <label class="form-label" for="phone">Phone Number</label>
+            <input class="form-input" type="tel" id="phone" name="phone" placeholder="+1 (000) 000-0000"/>
+          </div>
+        </div>
+        <div class="form-group reveal">
+          <label class="form-label" for="city">City / Country</label>
+          <input class="form-input" type="text" id="city" name="city" placeholder="Where are you located?"/>
+        </div>
+        <div class="form-group reveal">
+          <label class="form-label" for="decision">When did you make this decision?</label>
+          <select class="form-select" id="decision" name="decision">
+            <option value="" disabled selected>Select an option</option>
+            <option value="today">Today</option>
+            <option value="this-week">This week</option>
+            <option value="this-month">This month</option>
+            <option value="longer">A while ago — I want to grow deeper</option>
+          </select>
+        </div>
+        <div class="form-group reveal">
+          <label class="form-label" for="prayer">Prayer Request or Message</label>
+          <textarea class="form-textarea" id="prayer" name="prayer" placeholder="Share anything on your heart — a prayer request, a question, or simply what God has done for you…"></textarea>
+        </div>
+        <div class="form-check reveal">
+          <input type="checkbox" id="followUp" name="followUp" value="yes"/>
+          <label for="followUp">I'd like someone from The Witness Missions to follow up with me personally.</label>
+        </div>
+        <div class="form-check reveal">
+          <input type="checkbox" id="devotionals" name="devotionals" value="yes"/>
+          <label for="devotionals">Send me daily devotionals and encouragement by email.</label>
+        </div>
+        <div class="form-submit reveal">
+          <button type="submit" class="btn btn-fill" onclick="return validateForm()">Submit &amp; Connect ✝</button>
+        </div>
+        <p class="form-error" id="formError">Please fill in your name and a valid email address to continue.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <img src="logo.png" alt="The Witness Missions" class="footer-logo"/>
+  <p class="footer-verse">"He who began a good work in you will carry it on to completion." — Philippians 1:6</p>
+  <p class="footer-tag">You are loved &nbsp;·&nbsp; You are chosen &nbsp;·&nbsp; You are not alone</p>
+  <p class="footer-copy">© The Witness Missions. All rights reserved.</p>
+</footer>
+
+<!-- AI CHAT WIDGET -->
+<div class="chat-bubble" id="chatBubble">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div>
+        <div class="chat-header-title">✝ Ask a Question</div>
+        <div class="chat-header-sub">We're here to help you grow</div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg msg-ai">Peace be with you 🙏 I'm here to answer any questions you have about your new faith. What's on your heart?</div>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ask anything…" onkeydown="handleKey(event)"></textarea>
+      <button class="chat-send" id="chatSend" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()" title="Ask a question">✝</button>
+</div>
+
+<script>
+  // Particles
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = (Math.random()*100)+'%';
+    p.style.animationDuration = (12+Math.random()*20)+'s';
+    p.style.animationDelay = (Math.random()*22)+'s';
+    const s = (1+Math.random()*2.5)+'px';
+    p.style.width = p.style.height = s;
+    pc.appendChild(p);
+  }
+
+  // FAQ
+  function toggleFAQ(el) {
+    const item = el.closest('.faq-item');
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  }
+
+  // Scroll reveal
+  const ro = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); ro.unobserve(e.target); }
+  }), {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  // Form validation — returns true to allow native Netlify submit
+  function validateForm() {
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const em = document.getElementById('email').value.trim();
+    const err = document.getElementById('formError');
+    if (!fn || !ln || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+      err.style.display = 'block';
+      return false;
+    }
+    err.style.display = 'none';
+    return true; // let Netlify handle the submission
+  }
+
+  // AI CHAT
+  function toggleChat() {
+    const w = document.getElementById('chatWindow');
+    w.classList.toggle('open');
+    if (w.classList.contains('open')) document.getElementById('chatInput').focus();
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  const chatHistory = [];
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    document.getElementById('chatSend').disabled = true;
+
+    appendMessage(text, 'user');
+    chatHistory.push({role:'user', content: text});
+
+    const typing = appendTyping();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 400,
+          system: `You are a warm, faith-filled pastoral assistant for The Witness Missions — a Christian ministry welcoming new believers. Your role is to answer questions about faith, salvation, the Bible, prayer, and Christian living with grace, encouragement, and theological soundness. Keep responses concise (2-4 sentences), warm, and scripture-grounded. Reflect a theology of victory, freedom and empowerment through Christ — not one of struggle or defeat. Never mention you are an AI unless directly asked.`,
+          messages: chatHistory
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || "I'm sorry, I couldn't connect just now. Please try again or reach out to us directly.";
+      typing.remove();
+      appendMessage(reply, 'ai');
+      chatHistory.push({role:'assistant', content: reply});
+    } catch(e) {
+      typing.remove();
+      appendMessage("I'm having trouble connecting right now. Please try again in a moment.", 'ai');
+    }
+    document.getElementById('chatSend').disabled = false;
+  }
+
+  function appendMessage(text, who) {
+    const box = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `msg msg-${who}`;
+    div.textContent = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+
+  function appendTyping() {
+    const box = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg msg-ai msg-typing';
+    div.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+</script>
+</body>
+</html>
